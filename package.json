@@ -4,8 +4,14 @@
   "description": "**Weird Bites**",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "node": "^22.13.0",
+    "nodemon": "^3.1.9"
+  }
 }
