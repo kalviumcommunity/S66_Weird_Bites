@@ -1,6 +1,6 @@
 const express=require('express')
 const app=express()
-const PORT = 3000;
+const PORT = 8080;
 
 app.get('/ping',(req,res) =>{
     res.send('pong')
@@ -9,4 +9,4 @@ app.get('/ping',(req,res) =>{
 
 app.listen(PORT, () => {
     console.log(`Virtual Assistant API is running on http://localhost:${PORT}`);
-});
+});``
