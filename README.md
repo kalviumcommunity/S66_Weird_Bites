@@ -30,3 +30,8 @@ I picked this project because it’s unique, fun, and a little silly, which make
 - **UI/UX Design:** Enhancing my ability to create user-friendly and visually appealing interfaces that provide a seamless experience.  
 - **API Integration:** Understanding how to connect the frontend with the backend using APIs and ensuring smooth data flow.  
 - **Deployment & Maintenance:** Gaining hands-on experience in deploying the application and maintaining it for future updates or bug fixes.  
+
+
+### Render deployment link: 
+
+ https://s66-weird-bites.onrender.com
