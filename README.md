@@ -35,3 +35,8 @@ I picked this project because it’s unique, fun, and a little silly, which make
 ### Render deployment link: 
 
  https://s66-weird-bites.onrender.com
+
+### Frontent Deployment link:
+
+https://e4717b56.weirdbites.pages.dev/
+
