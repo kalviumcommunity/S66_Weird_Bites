@@ -1,13 +1,17 @@
 const express=require('express')
-const app=express()
 require('dotenv').config()
 const mongoose=require('mongoose')
-const UserModel =require("./Models/users")
+const cors=require("cors")
 const router=require("./routes/router")
+const foodRouter=require("./routes/food.routes")
+const path = require('path');
 
 let dbConnection="Disconnected" 
 
+const app=express()
 app.use(express.json());
+app.use(cors())
+
 
 let connection= mongoose.connect(process.env.mongoURL).then((res)=>{
     console.log("Connected to MongoDB!")
@@ -18,6 +22,8 @@ let connection= mongoose.connect(process.env.mongoURL).then((res)=>{
      dbConnection="Connection Failed!";
 })
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.get("/",(req,res)=> {
     try {
         res.send({"Message":"Connected to database successully!","Connection Status":dbConnection});
@@ -27,22 +33,15 @@ app.get("/",(req,res)=> {
 })
 
 app.use("/api",router)
+app.use("/food",foodRouter)
+
+
+
 
 
 app.listen(process.env.PORT,async()=>{
     console.log(`Server is running on port ${process.env.PORT}`)
 })
 
-// app.post("/create",async(req,res)=> {
-//     const{username,password,email}=req.body
-//     payload={username,password,email}
 
-//     try {
-//         let newUser=UserModel(payload)
-//         await newUser.save()
-//         res.send({"mesaage":"Hurray! Saved Successfully.."})
-//     } catch (error) {
-//         console.log(error)
-//         res.send({error:"error"})
-//     }
-// })
+// return "https://www.awesomecuisine.com/wp-content/uploads/2009/05/french-fries.jpg" 
