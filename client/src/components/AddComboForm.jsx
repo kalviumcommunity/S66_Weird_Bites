@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const AddComboForm = () => {
+const AddComboForm = ({onComboAdded}) => {
     const [formData, setFormData] = useState({ 
         title: "", 
         description: "", 
@@ -63,6 +63,9 @@ const AddComboForm = () => {
             if (!comboRes.ok) {
                 throw new Error('Failed to create combo');
             }
+
+            const newCombo = await comboRes.json();
+            onComboAdded(newCombo);
 
             setFormData({ title: "", description: "", username: "" });
             setImage(null);

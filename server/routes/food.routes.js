@@ -34,7 +34,7 @@ foodRouter.post("/weird-combos", upload.single("image"), async (req, res) => {
       
       res.status(201).json(newCombo);
     } catch (error) {
-      res.status(500).json({ error: "Could not add combo" });
+      res.status(500).json({ error: "Could not add combo",error });
     }
   });
 
