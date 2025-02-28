@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import AddComboForm from "./AddComboForm"
 
 const WeirdCombosList = () => {
     const [data, setData] = useState([]);
@@ -22,6 +23,10 @@ const WeirdCombosList = () => {
             });
     }, []);
 
+    const handleNewCombo=(newCombo)=>{
+        setData((prev) => [newCombo,...prev])
+    }
+
     const getImageUrl = (imagePath) => {
         if (!imagePath) return null;
         
@@ -36,6 +41,7 @@ const WeirdCombosList = () => {
 
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6">
+            <AddComboForm onComboAdded={handleNewCombo}/>
             {data.length === 0 ? (
                 <p className="text-center text-gray-500">No weird combos found</p>
             ) : (
