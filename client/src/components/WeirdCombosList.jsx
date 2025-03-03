@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import AddComboForm from "./AddComboForm"
+import { useNavigate } from "react-router-dom";
+
+
 
 const WeirdCombosList = () => {
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
+    const navigate=useNavigate()
 
     useEffect(() => {
         fetch("http://localhost:8002/food/weird-combos")
@@ -27,13 +31,26 @@ const WeirdCombosList = () => {
         setData((prev) => [newCombo,...prev])
     }
 
+
+    const handleDelete=async(id)=>{
+        try {
+            const response=await fetch(`http://localhost:8002/food/weird-combos/${id}`,{
+                method:"DELETE"
+            })
+
+            if(!response.ok){
+                throw new Error("Failed to delete combo")
+            }
+            setData ((prev)=>prev.filter((item)=> item._id !== id))
+            
+        } catch (error) {
+            console.error("Error deleting combo:", error);
+        }
+    }
+
     const getImageUrl = (imagePath) => {
         if (!imagePath) return null;
-        
-        // Strip any leading '/uploads/' from the path
         const filename = imagePath.replace(/^\/uploads\//, '').split('/').pop();
-        
-        // Construct the full URL with the correct port
         const url = `http://localhost:8002/uploads/${filename}`;
         console.log('Image URL:', url);
         return url;
@@ -58,7 +75,6 @@ const WeirdCombosList = () => {
                                         onError={(e) => {
                                             console.log('Failed to load image:', item.image);
                                             e.target.onerror = null;
-                                            // Don't use the placeholder URL that was causing errors
                                             e.target.style.display = 'none';
                                         }}
                                     />
@@ -68,6 +84,22 @@ const WeirdCombosList = () => {
                             <p className="text-sm text-gray-600">
                                 <span className="font-semibold">Posted by:</span> {item.username}
                             </p>
+
+                            <div className="flex space-x-4 mt-4">
+                                <button 
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                                    onClick={()=>navigate(`/edit/${item._id}`)}
+                                >
+                                    Edit
+                                </button>
+
+                                <button 
+                                    className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                                    onClick={()=>handleDelete(item._id)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
                         </div>
                     </div>
                 ))
