@@ -1,8 +1,14 @@
 const express=require('express')
+const Joi=require("joi")
 const router=express.Router()
 const User=require("../Models/users")
 
+const userSchema=Joi.object({
+    username:Joi.string().min(3).required(),
+    password: Joi.string().min(6).required(),
+    email:Joi.string().email().required()
 
+})
 router.get('/users',async(req, res)=>{
     try {
         const users=await User.find()
@@ -13,6 +19,12 @@ router.get('/users',async(req, res)=>{
 })
 
 router.post('/users', async(req, res)=>{
+
+    const {error}=userSchema.validate(req.body)
+    if(error){
+        return res.status(400).json({ "message": "Validation error", error: error.details[0].message });
+    }
+    
     try {
         const new_user=new User(req.body)
         await new_user.save()
