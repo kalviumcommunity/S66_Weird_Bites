@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import AddComboForm from "./AddComboForm"
+import AddComboForm from "./AddComboForm";
 import { useNavigate } from "react-router-dom";
-
-
 
 const WeirdCombosList = () => {
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
-    const navigate=useNavigate()
+    const [users, setUsers] = useState([]);  // Store unique usernames
+    const [selectedUser, setSelectedUser] = useState("All Users"); // Default selection
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch("http://localhost:8002/food/weird-combos")
@@ -20,6 +20,10 @@ const WeirdCombosList = () => {
             .then(data => {
                 console.log('Fetched data:', data);
                 setData(data);
+
+                // Extract unique users
+                const uniqueUsers = ["All Users", ...new Set(data.map(item => item.username))];
+                setUsers(uniqueUsers);
             })
             .catch(error => {
                 console.error("Error fetching data:", error);
@@ -27,26 +31,27 @@ const WeirdCombosList = () => {
             });
     }, []);
 
-    const handleNewCombo=(newCombo)=>{
-        setData((prev) => [newCombo,...prev])
-    }
+    const handleNewCombo = (newCombo) => {
+        setData((prev) => [newCombo, ...prev]);
+        if (!users.includes(newCombo.username)) {
+            setUsers((prev) => [...prev, newCombo.username]); // Add new user if not in list
+        }
+    };
 
-
-    const handleDelete=async(id)=>{
+    const handleDelete = async (id) => {
         try {
-            const response=await fetch(`http://localhost:8002/food/weird-combos/${id}`,{
-                method:"DELETE"
-            })
+            const response = await fetch(`http://localhost:8002/food/weird-combos/${id}`, {
+                method: "DELETE"
+            });
 
-            if(!response.ok){
-                throw new Error("Failed to delete combo")
+            if (!response.ok) {
+                throw new Error("Failed to delete combo");
             }
-            setData ((prev)=>prev.filter((item)=> item._id !== id))
-            
+            setData((prev) => prev.filter((item) => item._id !== id));
         } catch (error) {
             console.error("Error deleting combo:", error);
         }
-    }
+    };
 
     const getImageUrl = (imagePath) => {
         if (!imagePath) return null;
@@ -56,13 +61,34 @@ const WeirdCombosList = () => {
         return url;
     };
 
+    // Filter combos based on selected user
+    const filteredData = selectedUser === "All Users"
+        ? data
+        : data.filter(item => item.username === selectedUser);
+
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6">
-            <AddComboForm onComboAdded={handleNewCombo}/>
-            {data.length === 0 ? (
+            <AddComboForm onComboAdded={handleNewCombo} />
+
+            {/* User Selection Dropdown */}
+            <div className="flex justify-center mb-4">
+                <select
+                    className="px-4 py-2 border border-gray-300 rounded-lg"
+                    value={selectedUser}
+                    onChange={(e) => setSelectedUser(e.target.value)}
+                >
+                    {users.map((user, index) => (
+                        <option key={index} value={user}>
+                            {user}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {filteredData.length === 0 ? (
                 <p className="text-center text-gray-500">No weird combos found</p>
             ) : (
-                data.map(item => (
+                filteredData.map(item => (
                     <div key={item._id} className="bg-white rounded-lg shadow-lg overflow-hidden">
                         <div className="p-6">
                             <h2 className="text-2xl font-bold mb-4">{item.title}</h2>
@@ -88,14 +114,14 @@ const WeirdCombosList = () => {
                             <div className="flex space-x-4 mt-4">
                                 <button 
                                     className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                                    onClick={()=>navigate(`/edit/${item._id}`)}
+                                    onClick={() => navigate(`/edit/${item._id}`)}
                                 >
                                     Edit
                                 </button>
 
                                 <button 
                                     className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                                    onClick={()=>handleDelete(item._id)}
+                                    onClick={() => handleDelete(item._id)}
                                 >
                                     Delete
                                 </button>

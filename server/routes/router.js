@@ -18,6 +18,7 @@ router.get('/users',async(req, res)=>{
     }
 })
 
+
 router.post('/users', async(req, res)=>{
 
     const {error}=userSchema.validate(req.body)
