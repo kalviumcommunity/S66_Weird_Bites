@@ -18,7 +18,11 @@ const FoodSchema=new mongoose.Schema({
         type: String,
         required: true,
       },
-})
+      created_by: {
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: "User", 
+          required: true },
+},{timestamps:true})
 
 const FoodModel=mongoose.model("FoodModel",FoodSchema)
 module.exports=FoodModel
