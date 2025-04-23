@@ -20,7 +20,7 @@ const AddComboForm = ({ onComboAdded }) => {
       setImage(file);
       setError(null);
     } else {
-      setError("Please select a valid image file");
+      setError("Please select a valid image files");
       e.target.value = "";
     }
   };
@@ -32,7 +32,7 @@ const AddComboForm = ({ onComboAdded }) => {
 
   try {
     if (!image) {
-      throw new Error("Please select an image");
+      throw new Error("Please select a image");
     }
 
     const userId = "65df6a90c7a1b2e678f4e123"; // Replace with actual MongoDB ObjectId
